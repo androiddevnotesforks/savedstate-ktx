@@ -8,6 +8,7 @@ buildscript {
 
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20")
+        classpath("com.android.tools.build:gradle:7.3.1")
     }
 }
 
@@ -24,9 +25,7 @@ subprojects {
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            this.jvmTarget = "1.8"
-            this.freeCompilerArgs += "-Xexplicit-api=strict"
-        }
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+        kotlinOptions.freeCompilerArgs += "-Xexplicit-api=strict"
     }
 }
