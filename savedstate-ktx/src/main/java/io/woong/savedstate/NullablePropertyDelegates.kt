@@ -47,3 +47,58 @@ public operator fun <T> SavedStateHandle.getValue(self: Any?, property: KPropert
 public operator fun <T> SavedStateHandle.setValue(self: Any?, property: KProperty<*>, value: T?) {
     this[property.name] = value
 }
+
+/**
+ * Returns a property delegate for reading and writing a value into [SavedStateHandle]
+ * with initial value.
+ *
+ * Reading the property equals to read value from [SavedStateHandle]
+ * and writing equals to write value to [SavedStateHandle].
+ *
+ * To define initialized property delegate, use `by` keyword of Kotlin:
+ *
+ * ```
+ * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
+ *     // This code equals to below code:
+ *     // var foo: String?
+ *     //     get() = savedStateHandle["foo"]
+ *     //     set(value) { savedStateHandle["foo"] = value }
+ *     //
+ *     // init {
+ *     //     savedStateHandle["foo"] = "init"
+ *     // }
+ *     var foo: String? by savedStateHandle.nullable("init")
+ * }
+ * ```
+ *
+ * @param initialValue The initial value of this property.
+ */
+public fun <T> SavedStateHandle.nullable(initialValue: T?): NullablePropertyDelegateProvider<T> {
+    return NullablePropertyDelegateProvider(savedStateHandle = this, initialValue)
+}
+
+public class NullablePropertyDelegateProvider<T>(
+    private val savedStateHandle: SavedStateHandle,
+    private val initialValue: T?
+) {
+    public operator fun provideDelegate(self: Any?, property: KProperty<*>): NullablePropertyDelegate<T> {
+        val key = property.name
+        if (!savedStateHandle.contains(key)) {
+            savedStateHandle[key] = initialValue
+        }
+        return NullablePropertyDelegate(savedStateHandle, key)
+    }
+}
+
+public class NullablePropertyDelegate<T>(
+    private val savedStateHandle: SavedStateHandle,
+    private val key: String
+) {
+    public operator fun getValue(self: Any?, property: KProperty<*>): T? {
+        return savedStateHandle[key]
+    }
+
+    public operator fun setValue(self: Any?, property: KProperty<*>, value: T?) {
+        savedStateHandle[key] = value
+    }
+}
