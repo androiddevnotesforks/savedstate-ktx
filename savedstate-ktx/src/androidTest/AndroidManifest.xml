@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.woong.savedstate.test">
     <application>
-        <activity android:name="io.woong.savedstate.PropertyDelegatorTest$TestActivity" />
+        <activity android:name="io.woong.savedstate.NullablePropertyDelegatorTest$TestActivity" />
     </application>
 </manifest>
