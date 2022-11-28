@@ -4,41 +4,45 @@ import androidx.lifecycle.SavedStateHandle
 import kotlin.reflect.KProperty
 
 /**
- * Delegates [SavedStateHandle.getValue] operation to property.
- * The delegated property returns a nullable value that stored in [SavedStateHandle] with a key.
- * The key of the property is the name of the property.
+ * Returns a property delegate for reading a value from [SavedStateHandle].
+ *
+ * Reading the property equals to read value from [SavedStateHandle].
+ * The key to read value from handle is its property name.
+ *
+ * To define property delegate, use `by` keyword of Kotlin:
  *
  * ```
  * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
- *     // Basic way to get value from saved state handle.
- *     val foo: String?
- *         get() = savedStateHandle["foo"]
- *
- *     // New way using this library.
- *     val bar: String? by savedStateHandle
+ *     // This code equals to below code:
+ *     // val foo: String?
+ *     //     get() = savedStateHandle["foo"]
+ *     val foo: String? by savedStateHandle
  * }
  * ```
+ *
+ * The type of property must nullable because [SavedStateHandle] can returns `null`.
  */
 public operator fun <T> SavedStateHandle.getValue(self: Any?, property: KProperty<*>): T? {
     return this[property.name]
 }
 
 /**
- * Delegates [SavedStateHandle.setValue] operation to property.
- * The delegated property takes a nullable value and stores in [SavedStateHandle] with a key.
- * The key of the property is the name of the property.
+ * Returns a property delegate for writing a value to [SavedStateHandle].
+ *
+ * Writing the property equals to write value to [SavedStateHandle].
+ * The key to write value to handle is its property name.
  *
  * ```
  * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
- *     // Basic way to get/set value from saved state handle.
- *     var foo: String?
- *         get() = savedStateHandle["foo"]
- *         set(value) { savedStateHandle["foo"] = value }
- *
- *     // New way using this library.
+ *     // This code equals to below code:
+ *     // var foo: String?
+ *     //     get() = savedStateHandle["foo"]
+ *     //     set(value) { savedStateHandle["foo"] = value }
  *     var foo: String? by savedStateHandle
  * }
  * ```
+ *
+ * The type of property must nullable because [SavedStateHandle] can store `null`.
  */
 public operator fun <T> SavedStateHandle.setValue(self: Any?, property: KProperty<*>, value: T?) {
     this[property.name] = value
