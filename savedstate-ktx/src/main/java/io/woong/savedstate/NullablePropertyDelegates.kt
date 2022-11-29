@@ -9,7 +9,8 @@ import kotlin.reflect.KProperty
  * Reading the property equals to read value from [SavedStateHandle].
  * The key to read value from handle is its property name.
  *
- * To define property delegate, use `by` keyword of Kotlin:
+ * To define property delegate, use `by` keyword of Kotlin.
+ * The property must nullable type.
  *
  * ```
  * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
@@ -19,8 +20,6 @@ import kotlin.reflect.KProperty
  *     val foo: String? by savedStateHandle
  * }
  * ```
- *
- * The type of property must nullable because [SavedStateHandle] can returns `null`.
  */
 public operator fun <T> SavedStateHandle.getValue(self: Any?, property: KProperty<*>): T? {
     return this[property.name]
@@ -31,6 +30,9 @@ public operator fun <T> SavedStateHandle.getValue(self: Any?, property: KPropert
  *
  * Writing the property equals to write value to [SavedStateHandle].
  * The key to write value to handle is its property name.
+ *
+ * To define property delegate, use `by` keyword of Kotlin.
+ * The property must nullable type.
  *
  * ```
  * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
@@ -49,13 +51,14 @@ public operator fun <T> SavedStateHandle.setValue(self: Any?, property: KPropert
 }
 
 /**
- * Returns a property delegate for reading and writing a value into [SavedStateHandle]
+ * Returns a property delegate for reading and writing a nullable value into [SavedStateHandle]
  * with initial value.
  *
  * Reading the property equals to read value from [SavedStateHandle]
  * and writing equals to write value to [SavedStateHandle].
  *
- * To define initialized property delegate, use `by` keyword of Kotlin:
+ * To define initialized property delegate, use `by` keyword of Kotlin.
+ * The property must nullable type.
  *
  * ```
  * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
@@ -65,7 +68,9 @@ public operator fun <T> SavedStateHandle.setValue(self: Any?, property: KPropert
  *     //     set(value) { savedStateHandle["foo"] = value }
  *     //
  *     // init {
- *     //     savedStateHandle["foo"] = "init"
+ *     //     if (!savedStateHandle.contains("foo")) {
+ *     //         savedStateHandle["foo"] = "init"
+ *     //     }
  *     // }
  *     var foo: String? by savedStateHandle.nullable("init")
  * }
