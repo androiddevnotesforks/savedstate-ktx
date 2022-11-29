@@ -1,7 +1,6 @@
 package io.woong.savedstate
 
 import android.content.Context
-import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.lifecycle.SavedStateHandle
@@ -15,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-public class PropertyDelegatorTest {
+public class NullablePropertyDelegatorTest {
     private lateinit var context: Context
 
     @Before
@@ -24,61 +23,51 @@ public class PropertyDelegatorTest {
     }
 
     @Test
-    public fun testReadingAndWriting() {
+    public fun simplestDelegate() {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.string).isNull()
-            assertThat(viewModel.doubleArray).isNull()
-            assertThat(viewModel.integerList).isNull()
+            assertThat(viewModel.simpleValue).isNull()
+            assertThat(viewModel.simpleVariable).isNull()
 
-            viewModel.string = "test"
-            viewModel.doubleArray = doubleArrayOf(0.1, 0.2, 0.3)
-            viewModel.doubleArray?.set(0, -0.1)
-            viewModel.integerList = listOf(1, 2, 3)
-            assertThat(viewModel.string).isEqualTo("test")
-            assertThat(viewModel.doubleArray)
-                .usingExactEquality()
-                .containsExactlyElementsIn(arrayOf(-0.1, 0.2, 0.3))
-            assertThat(viewModel.integerList).containsExactlyElementsIn(listOf(1, 2, 3))
+            viewModel.simpleVariable = "test"
+            assertThat(viewModel.simpleVariable).isEqualTo("test")
         }
     }
 
     @Test
-    public fun testAutomaticSettingFromBundle() {
-        val intent = Intent(context, TestActivity::class.java)
-        intent.putExtra("string", "test")
-        intent.putExtra("doubleArray", doubleArrayOf(0.9, 0.8, 0.7))
-        intent.putExtra("integerList", arrayListOf(9, 8, 7))
-
-        val scenario = launchActivity<TestActivity>(intent)
+    public fun nullableWithInitialValue() {
+        val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.string).isEqualTo("test")
-            assertThat(viewModel.doubleArray)
-                .usingExactEquality()
-                .containsExactlyElementsIn(arrayOf(0.9, 0.8, 0.7))
-            assertThat(viewModel.integerList).containsExactlyElementsIn(listOf(9, 8, 7))
+            assertThat(viewModel.initializedValue).isEqualTo("a")
+            assertThat(viewModel.initializedVariable).isEqualTo("b")
+
+            viewModel.initializedVariable = "c"
+            assertThat(viewModel.initializedVariable).isEqualTo("c")
         }
     }
 
     @Test
-    public fun testSavedStateAfterRecreation() {
+    public fun stateSaving() {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            viewModel.string = "test"
-            viewModel.doubleArray = doubleArrayOf(-0.5, 0.0, 0.5)
-            viewModel.integerList = listOf(2, 4, 6, 8)
+            viewModel.simpleVariable = "aaa"
+            viewModel.initializedVariable = "bbb"
+
+            assertThat(viewModel.simpleValue).isNull()
+            assertThat(viewModel.simpleVariable).isEqualTo("aaa")
+            assertThat(viewModel.initializedValue).isEqualTo("a")
+            assertThat(viewModel.initializedVariable).isEqualTo("bbb")
         }
         scenario.recreate()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.string).isEqualTo("test")
-            assertThat(viewModel.doubleArray)
-                .usingExactEquality()
-                .containsExactlyElementsIn(arrayOf(-0.5, 0.0, 0.5))
-            assertThat(viewModel.integerList).containsExactlyElementsIn(listOf(2, 4, 6, 8))
+            assertThat(viewModel.simpleValue).isNull()
+            assertThat(viewModel.simpleVariable).isEqualTo("aaa")
+            assertThat(viewModel.initializedValue).isEqualTo("a")
+            assertThat(viewModel.initializedVariable).isEqualTo("bbb")
         }
     }
 
@@ -87,8 +76,10 @@ public class PropertyDelegatorTest {
     }
 
     public class TestViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
-        public var string: String? by savedStateHandle
-        public var doubleArray: DoubleArray? by savedStateHandle
-        public var integerList: List<Int>? by savedStateHandle
+        public val simpleValue: String? by savedStateHandle
+        public var simpleVariable: String? by savedStateHandle
+
+        public val initializedValue: String? by savedStateHandle.nullable("a")
+        public var initializedVariable: String? by savedStateHandle.nullable("b")
     }
 }
