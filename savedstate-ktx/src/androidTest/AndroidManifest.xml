@@ -4,5 +4,6 @@
     package="io.woong.savedstate.test">
     <application>
         <activity android:name="io.woong.savedstate.NullablePropertyDelegatorTest$TestActivity" />
+        <activity android:name="io.woong.savedstate.NotNullPropertyDelegatorTest$TestActivity" />
     </application>
 </manifest>
