@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.woong.savedstate"
+    namespace = "$group"
 
     compileSdk = 33
     defaultConfig {
