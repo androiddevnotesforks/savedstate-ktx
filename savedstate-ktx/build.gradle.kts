@@ -1,10 +1,14 @@
+import java.util.Properties
+
 plugins {
     id("org.jetbrains.kotlin.android")
     id("com.android.library")
+    id("maven-publish")
+    id("signing")
 }
 
 android {
-    namespace = "io.woong.savedstate"
+    namespace = "${project.group}"
 
     compileSdk = 33
     defaultConfig {
@@ -21,6 +25,13 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
@@ -34,4 +45,71 @@ dependencies {
     androidTestImplementation("com.google.truth:truth:1.1.3")
     androidTestImplementation("androidx.appcompat:appcompat:1.5.1")
     androidTestImplementation("androidx.activity:activity-ktx:1.6.1")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "sonatype"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = localProperty("OSSRH_USERNAME")
+                password = localProperty("OSSRH_PASSWORD")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("release") {
+            afterEvaluate {
+                from(components.getByName("release"))
+            }
+
+            groupId = "${project.group}"
+            artifactId = "savedstate-ktx"
+            version = "${project.version}"
+
+            pom {
+                name.set("savedstate-ktx")
+                description.set("Kotlin extensions for Android SavedStateHandle")
+                url.set("https://github.com/cheonjaewoong/savedstate-ktx")
+
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("https://github.com/cheonjaewoong/savedstate-ktx/blob/master/LICENSE.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("cheonjaewoong")
+                        name.set("Jaewoong Cheon")
+                        email.set("cheonjaewoong@gmail.com")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/cheonjaewoong/savedstate-ktx")
+                    connection.set("scm:git:git://github.com/cheonjaewoong/savedstate-ktx.git")
+                    developerConnection.set("scm:git:ssh://git@github.com/cheonjaewoong/savedstate-ktx.git")
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications)
+}
+
+fun localProperty(name: String): String? {
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (!localPropertiesFile.exists()) {
+        return null
+    }
+    val properties = localPropertiesFile.reader().use { reader ->
+        Properties().apply { load(reader) }
+    }
+    return properties.getProperty(name, null)
 }

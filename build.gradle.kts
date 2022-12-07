@@ -13,6 +13,9 @@ buildscript {
 }
 
 allprojects {
+    group = "io.woong.savedstate"
+    version = "1.0.0-alpha1"
+
     repositories {
         google()
         mavenCentral()
