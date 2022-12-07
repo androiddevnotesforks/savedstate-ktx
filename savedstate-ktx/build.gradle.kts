@@ -53,8 +53,8 @@ publishing {
             name = "sonatype"
             url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = property("OSSRH_USERNAME")
-                password = property("OSSRH_PASSWORD")
+                username = localProperty("OSSRH_USERNAME")
+                password = localProperty("OSSRH_PASSWORD")
             }
         }
     }
@@ -100,24 +100,7 @@ publishing {
 }
 
 signing {
-    // Try in-memory signing if there are environment variables for signing.
-    // If not, use local signing key
-    try {
-        val key = property("SIGNING_KEY")
-        val keyPassword = property("SIGNING_PASSWORD")
-        useInMemoryPgpKeys(key, keyPassword)
-    } catch (_: Exception) {
-        println("Use local key to signing artifacts")
-    }
     sign(publishing.publications)
-}
-
-fun property(name: String): String {
-    return try {
-        localProperty(name)
-    } catch (e: Exception) {
-        environmentVariable(name)
-    }
 }
 
 fun localProperty(name: String): String {
@@ -130,8 +113,4 @@ fun localProperty(name: String): String {
     }
     val property = properties.getProperty(name, null)
     return property ?: throw IllegalArgumentException("Cannot find $name in local.properties")
-}
-
-fun environmentVariable(name: String): String {
-    return System.getenv(name)
 }
