@@ -103,14 +103,13 @@ signing {
     sign(publishing.publications)
 }
 
-fun localProperty(name: String): String {
+fun localProperty(name: String): String? {
     val localPropertiesFile = project.rootProject.file("local.properties")
     if (!localPropertiesFile.exists()) {
-        throw IllegalStateException("Cannot find 'local.properties' file")
+        return null
     }
     val properties = localPropertiesFile.reader().use { reader ->
         Properties().apply { load(reader) }
     }
-    val property = properties.getProperty(name, null)
-    return property ?: throw IllegalArgumentException("Cannot find $name in local.properties")
+    return properties.getProperty(name, null)
 }
