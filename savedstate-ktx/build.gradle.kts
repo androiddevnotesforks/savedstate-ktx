@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.android.library")
     id("maven-publish")
+    id("signing")
 }
 
 android {
@@ -96,6 +97,19 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    // Try in-memory signing if there are environment variables for signing.
+    // If not, use local signing key
+    try {
+        val key = property("SIGNING_KEY")
+        val keyPassword = property("SIGNING_PASSWORD")
+        useInMemoryPgpKeys(key, keyPassword)
+    } catch (_: Exception) {
+        println("Use local key to signing artifacts")
+    }
+    sign(publishing.publications)
 }
 
 fun property(name: String): String {
