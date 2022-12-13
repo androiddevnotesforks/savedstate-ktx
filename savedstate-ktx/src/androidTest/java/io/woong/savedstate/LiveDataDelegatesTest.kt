@@ -52,6 +52,7 @@ public class LiveDataDelegatesTest {
             }
             viewModel.setInt(100)
             assertThat(viewModel.intLiveData.value).isEqualTo(100)
+            assertThat(observedValue).isNotNull()
             assertThat(observedValue).isEqualTo(100)
         }
     }
