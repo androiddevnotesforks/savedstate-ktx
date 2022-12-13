@@ -65,7 +65,7 @@ public class LiveDataDelegatesTest {
         public val intLiveData: LiveData<Int>
             get() = _intLiveData
 
-        private val _initializedIntLiveData: MutableLiveData<Int> by savedStateHandle.liveData(100)
+        private val _initializedIntLiveData by savedStateHandle.liveData(100)
         public val initializedIntLiveData: LiveData<Int>
             get() = _initializedIntLiveData
 
