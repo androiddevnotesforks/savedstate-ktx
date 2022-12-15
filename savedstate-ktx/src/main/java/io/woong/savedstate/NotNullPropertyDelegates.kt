@@ -31,11 +31,11 @@ import kotlin.reflect.KProperty
  *
  * @param initialValue The initial value of this property.
  */
-public fun <T> SavedStateHandle.notNull(initialValue: T): NotNullPropertyDelegateProvider<T> {
+public fun <T : Any> SavedStateHandle.notNull(initialValue: T): NotNullPropertyDelegateProvider<T> {
     return NotNullPropertyDelegateProvider(savedStateHandle = this, initialValue)
 }
 
-public class NotNullPropertyDelegateProvider<T>(
+public class NotNullPropertyDelegateProvider<T : Any>(
     private val savedStateHandle: SavedStateHandle,
     private val initialValue: T
 ) {
@@ -48,7 +48,7 @@ public class NotNullPropertyDelegateProvider<T>(
     }
 }
 
-public class NotNullPropertyDelegate<T>(
+public class NotNullPropertyDelegate<T : Any>(
     private val savedStateHandle: SavedStateHandle,
     private val key: String
 ) {
