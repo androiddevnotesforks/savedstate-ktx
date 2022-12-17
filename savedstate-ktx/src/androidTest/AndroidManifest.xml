@@ -6,5 +6,6 @@
         <activity android:name="io.woong.savedstate.LiveDataDelegatesTest$TestActivity" />
         <activity android:name="io.woong.savedstate.NullablePropertyDelegatorTest$TestActivity" />
         <activity android:name="io.woong.savedstate.NotNullPropertyDelegatorTest$TestActivity" />
+        <activity android:name="io.woong.savedstate.StateFlowDelegatesTest$TestActivity" />
     </application>
 </manifest>
