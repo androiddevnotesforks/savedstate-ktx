@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
     api("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
     implementation("androidx.core:core-ktx:1.9.0")
 
