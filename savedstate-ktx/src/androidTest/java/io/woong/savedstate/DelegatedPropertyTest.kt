@@ -27,13 +27,30 @@ public class DelegatedPropertyTest {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.nullableProperty).isNull()
-            assertThat(viewModel.initializedNullableProperty).isEqualTo("init")
 
-            viewModel.nullableProperty = "test"
-            viewModel.initializedNullableProperty = "test"
-            assertThat(viewModel.nullableProperty).isEqualTo("test")
-            assertThat(viewModel.initializedNullableProperty).isEqualTo("test")
+            assertThat(viewModel.nullableProperty).isNull()
+            assertThat(
+                viewModel.savedStateHandle.get<String>("nullableProperty")
+            ).isNull()
+
+            viewModel.nullableProperty = "new"
+
+            assertThat(viewModel.nullableProperty).isEqualTo("new")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("nullableProperty")
+            ).isEqualTo("new")
+
+            assertThat(viewModel.initializedNullableProperty).isEqualTo("init")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("initializedNullableProperty")
+            ).isEqualTo("init")
+
+            viewModel.initializedNullableProperty = "new"
+
+            assertThat(viewModel.initializedNullableProperty).isEqualTo("new")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("initializedNullableProperty")
+            ).isEqualTo("new")
         }
     }
 
@@ -42,10 +59,18 @@ public class DelegatedPropertyTest {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.notNullProperty).isEqualTo("init")
 
-            viewModel.notNullProperty = "test"
-            assertThat(viewModel.notNullProperty).isEqualTo("test")
+            assertThat(viewModel.notNullProperty).isEqualTo("init")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("notNullProperty")
+            ).isEqualTo("init")
+
+            viewModel.notNullProperty = "new"
+
+            assertThat(viewModel.notNullProperty).isEqualTo("new")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("notNullProperty")
+            ).isEqualTo("new")
         }
     }
 

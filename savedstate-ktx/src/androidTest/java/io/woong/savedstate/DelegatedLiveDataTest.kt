@@ -19,10 +19,18 @@ public class DelegatedLiveDataTest {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.intLiveData.value).isNull()
 
-            viewModel.setInt(100)
-            assertThat(viewModel.intLiveData.value).isEqualTo(100)
+            assertThat(viewModel.liveData.value).isNull()
+            assertThat(
+                viewModel.savedStateHandle.get<String>("_liveData")
+            ).isNull()
+
+            viewModel.setLiveData("new")
+
+            assertThat(viewModel.liveData.value).isEqualTo("new")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("_liveData")
+            ).isEqualTo("new")
         }
     }
 
@@ -31,29 +39,18 @@ public class DelegatedLiveDataTest {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.initializedIntLiveData.value).isNotNull()
-            assertThat(viewModel.initializedIntLiveData.value).isEqualTo(100)
 
-            viewModel.setInitializedInt(200)
-            assertThat(viewModel.initializedIntLiveData.value).isEqualTo(200)
-        }
-    }
+            assertThat(viewModel.initializedLiveData.value).isEqualTo("init")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("_initializedLiveData")
+            ).isEqualTo("init")
 
-    @Test
-    public fun observerWorks() {
-        val scenario = launchActivity<TestActivity>()
-        scenario.onActivity { activity ->
-            val viewModel = activity.viewModel
-            assertThat(viewModel.intLiveData.value).isNull()
+            viewModel.setInitializedLiveData("new")
 
-            var observedValue: Int? = null
-            viewModel.intLiveData.observe(activity) {
-                observedValue = it
-            }
-            viewModel.setInt(100)
-            assertThat(viewModel.intLiveData.value).isEqualTo(100)
-            assertThat(observedValue).isNotNull()
-            assertThat(observedValue).isEqualTo(100)
+            assertThat(viewModel.initializedLiveData.value).isEqualTo("new")
+            assertThat(
+                viewModel.savedStateHandle.get<String>("_initializedLiveData")
+            ).isEqualTo("new")
         }
     }
 
@@ -61,21 +58,21 @@ public class DelegatedLiveDataTest {
         public val viewModel: TestViewModel by viewModels()
     }
 
-    public class TestViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
-        private val _intLiveData: MutableLiveData<Int> by savedStateHandle.liveData()
-        public val intLiveData: LiveData<Int>
-            get() = _intLiveData
+    public class TestViewModel(public val savedStateHandle: SavedStateHandle) : ViewModel() {
+        private val _liveData: MutableLiveData<String> by savedStateHandle.liveData()
+        public val liveData: LiveData<String>
+            get() = _liveData
 
-        private val _initializedIntLiveData by savedStateHandle.liveData(100)
-        public val initializedIntLiveData: LiveData<Int>
-            get() = _initializedIntLiveData
+        private val _initializedLiveData by savedStateHandle.liveData("init")
+        public val initializedLiveData: LiveData<String>
+            get() = _initializedLiveData
 
-        public fun setInt(value: Int) {
-            _intLiveData.value = value
+        public fun setLiveData(value: String) {
+            _liveData.value = value
         }
 
-        public fun setInitializedInt(value: Int) {
-            _initializedIntLiveData.value = value
+        public fun setInitializedLiveData(value: String) {
+            _initializedLiveData.value = value
         }
     }
 }
