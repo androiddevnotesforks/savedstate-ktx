@@ -5,22 +5,11 @@ import androidx.lifecycle.SavedStateHandle
 import kotlin.reflect.KProperty
 
 /**
- * Returns a [MutableLiveData] that access data associated with the [SavedStateHandle].
- * The value of [LiveData][androidx.lifecycle.LiveData] is automatically saved in [SavedStateHandle].
- *
- * If the [initialValue] is `null`, the [LiveData][androidx.lifecycle.LiveData] will have `null` value.
- * To avoid `null`, you should set [initialValue].
+ * Returns a delegated [LiveData][androidx.lifecycle.LiveData] that handle value
+ * stored in the [SavedStateHandle].
  *
  * ```
- * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
- *     private val _foo: MutableLiveData<Int> by savedStateHandle.liveData()
- *     val foo: LiveData<Int>
- *         get() = _foo
- *
- *     private val _bar: MutableLiveData<Int> by savedStateHandle.liveData(0)
- *     val bar: LiveData<Int>
- *         get() = _bar
- * }
+ * val liveData: MutableLiveData<String> by savedStateHandle.liveData()
  * ```
  *
  * @param initialValue Optional initial value of this [LiveData][androidx.lifecycle.LiveData].
@@ -29,17 +18,26 @@ public fun <T> SavedStateHandle.liveData(initialValue: T? = null): LiveDataDeleg
     return LiveDataDelegateProvider(savedStateHandle = this, initialValue)
 }
 
+/**
+ * Internal delegated [LiveData][androidx.lifecycle.LiveData] provider.
+ */
 public class LiveDataDelegateProvider<T>(
     private val savedStateHandle: SavedStateHandle,
     private val initialValue: T?
 ) {
-    public operator fun provideDelegate(self: Any?, property: KProperty<*>): LiveDataDelegate<T> {
+    public operator fun provideDelegate(
+        self: Any?,
+        property: KProperty<*>
+    ): DelegatedLiveData<T> {
         val key = property.name
-        return LiveDataDelegate(savedStateHandle, key, initialValue)
+        return DelegatedLiveData(savedStateHandle, key, initialValue)
     }
 }
 
-public class LiveDataDelegate<T>(
+/**
+ * Internal implementation of delegated [LiveData][androidx.lifecycle.LiveData].
+ */
+public class DelegatedLiveData<T>(
     savedStateHandle: SavedStateHandle,
     key: String,
     initialValue: T?

@@ -5,13 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KProperty
 
 /**
- * Returns a [StateFlow] delegate that emits value stored in [SavedStateHandle].
- *
- * ```
- * class ExampleViewModel(savedStateHandle: SavedStateHandle) {
- *     val foo: StateFlow<Int> by savedStateHandle.stateFlow(0)
- * }
- * ```
+ * Returns a delegated [StateFlow] that hande value stored in the [SavedStateHandle].
  *
  * @param initialValue Initial value of this [StateFlow].
  */
@@ -19,17 +13,26 @@ public fun <T> SavedStateHandle.stateFlow(initialValue: T): StateFlowDelegatePro
     return StateFlowDelegateProvider(savedStateHandle = this, initialValue)
 }
 
+/**
+ * Internal delegated [StateFlow] provider.
+ */
 public class StateFlowDelegateProvider<T>(
     private val savedStateHandle: SavedStateHandle,
     private val initialValue: T
 ) {
-    public operator fun provideDelegate(self: Any?, property: KProperty<*>): StateFlowDelegate<T> {
+    public operator fun provideDelegate(
+        self: Any?,
+        property: KProperty<*>
+    ): DelegatedStateFlow<T> {
         val key = property.name
-        return StateFlowDelegate(savedStateHandle, key, initialValue)
+        return DelegatedStateFlow(savedStateHandle, key, initialValue)
     }
 }
 
-public class StateFlowDelegate<T>(
+/**
+ * Internal implementation of delegated [StateFlow].
+ */
+public class DelegatedStateFlow<T>(
     savedStateHandle: SavedStateHandle,
     key: String,
     initialValue: T
