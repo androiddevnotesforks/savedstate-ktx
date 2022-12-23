@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-public class NotNullPropertyDelegatorTest {
+public class DelegatedPropertyTest {
     private lateinit var context: Context
 
     @Before
@@ -23,33 +23,29 @@ public class NotNullPropertyDelegatorTest {
     }
 
     @Test
-    public fun notNullWithInitialValue() {
+    public fun nullableProperty() {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            assertThat(viewModel.notNullValue).isEqualTo("a")
-            assertThat(viewModel.notNullVariable).isEqualTo("b")
+            assertThat(viewModel.nullableProperty).isNull()
+            assertThat(viewModel.initializedNullableProperty).isEqualTo("init")
 
-            viewModel.notNullVariable = "c"
-            assertThat(viewModel.notNullVariable).isEqualTo("c")
+            viewModel.nullableProperty = "test"
+            viewModel.initializedNullableProperty = "test"
+            assertThat(viewModel.nullableProperty).isEqualTo("test")
+            assertThat(viewModel.initializedNullableProperty).isEqualTo("test")
         }
     }
 
     @Test
-    public fun stateSaving() {
+    public fun notNullProperty() {
         val scenario = launchActivity<TestActivity>()
         scenario.onActivity { activity ->
             val viewModel = activity.viewModel
-            viewModel.notNullVariable = "bbb"
+            assertThat(viewModel.notNullProperty).isEqualTo("init")
 
-            assertThat(viewModel.notNullValue).isEqualTo("a")
-            assertThat(viewModel.notNullVariable).isEqualTo("bbb")
-        }
-        scenario.recreate()
-        scenario.onActivity { activity ->
-            val viewModel = activity.viewModel
-            assertThat(viewModel.notNullValue).isEqualTo("a")
-            assertThat(viewModel.notNullVariable).isEqualTo("bbb")
+            viewModel.notNullProperty = "test"
+            assertThat(viewModel.notNullProperty).isEqualTo("test")
         }
     }
 
@@ -57,8 +53,10 @@ public class NotNullPropertyDelegatorTest {
         public val viewModel: TestViewModel by viewModels()
     }
 
-    public class TestViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
-        public val notNullValue: String by savedStateHandle.notNull("a")
-        public var notNullVariable: String by savedStateHandle.notNull("b")
+    public class TestViewModel(public val savedStateHandle: SavedStateHandle) : ViewModel() {
+        public var nullableProperty: String? by savedStateHandle.nullable()
+        public var initializedNullableProperty: String? by savedStateHandle.nullable("init")
+
+        public var notNullProperty: String by savedStateHandle.notNull("init")
     }
 }

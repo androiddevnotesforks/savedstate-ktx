@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-public class LiveDataDelegatesTest {
+public class DelegatedLiveDataTest {
     @Test
     public fun liveDataDelegate() {
         val scenario = launchActivity<TestActivity>()

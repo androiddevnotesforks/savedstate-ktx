@@ -3,9 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.woong.savedstate.test">
     <application>
-        <activity android:name="io.woong.savedstate.LiveDataDelegatesTest$TestActivity" />
-        <activity android:name="io.woong.savedstate.NullablePropertyDelegatorTest$TestActivity" />
-        <activity android:name="io.woong.savedstate.NotNullPropertyDelegatorTest$TestActivity" />
-        <activity android:name="io.woong.savedstate.StateFlowDelegatesTest$TestActivity" />
+        <activity android:name="io.woong.savedstate.DelegatedLiveDataTest$TestActivity" />
+        <activity android:name="io.woong.savedstate.DelegatedPropertyTest$TestActivity" />
+        <activity android:name="io.woong.savedstate.DelegatedStateFlowTest$TestActivity" />
     </application>
 </manifest>
