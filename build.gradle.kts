@@ -14,7 +14,7 @@ buildscript {
 
 allprojects {
     group = "io.woong.savedstate"
-    version = "1.0.0-beta1"
+    version = "1.0.0"
 
     repositories {
         google()
