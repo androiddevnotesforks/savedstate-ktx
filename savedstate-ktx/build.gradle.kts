@@ -9,8 +9,8 @@ plugins {
 
 android {
     namespace = "${project.group}"
-
     compileSdk = 33
+
     defaultConfig {
         minSdk = 21
         targetSdk = 33
@@ -44,7 +44,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation("com.google.truth:truth:1.1.3")
-    androidTestImplementation("androidx.appcompat:appcompat:1.5.1")
     androidTestImplementation("androidx.activity:activity-ktx:1.6.1")
 }
 
