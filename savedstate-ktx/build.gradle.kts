@@ -27,14 +27,14 @@ android {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
     api("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
     implementation("androidx.core:core-ktx:1.9.0")
 
     androidTestImplementation("androidx.test:core-ktx:1.5.0")
-    androidTestImplementation("androidx.test:runner:1.5.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("com.google.truth:truth:1.1.3")
     androidTestImplementation("androidx.appcompat:appcompat:1.5.1")
     androidTestImplementation("androidx.activity:activity-ktx:1.6.1")
