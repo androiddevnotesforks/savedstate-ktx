@@ -36,7 +36,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("com.google.truth:truth:1.1.3")
-    androidTestImplementation("androidx.appcompat:appcompat:1.5.1")
     androidTestImplementation("androidx.activity:activity-ktx:1.6.1")
 }
 
