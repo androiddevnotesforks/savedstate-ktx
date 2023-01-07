@@ -1,7 +1,8 @@
 # SavedState KTX
 
-![maven-central](https://img.shields.io/maven-central/v/io.woong.savedstate/savedstate-ktx)
+![android-sdk](https://img.shields.io/badge/android-21+-brightgreen?logo=android)
 ![kotlin-version](https://img.shields.io/badge/kotlin-1.7.20-blueviolet?logo=kotlin)
+![maven-central](https://img.shields.io/maven-central/v/io.woong.savedstate/savedstate-ktx)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 [![test](https://github.com/cheonjaewoong/savedstate-ktx/actions/workflows/test.yaml/badge.svg)](https://github.com/cheonjaewoong/savedstate-ktx/actions/workflows/test.yaml)
 
@@ -70,6 +71,16 @@ class SampleViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
 Like delegated livedata, you can use delegated stateflow like this.
 
+```kotlin
+class SampleViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
+    @OptIn(ExperimentalSavedStateKtxApi::class)
+    val stateFlow: MutableStateFlow<String> by savedStateHandle.mutableStateFlow("init")
+}
+```
+
+Delegated mutable stateflow is currently experimental feature.
+You can use like above sample.
+
 ## License
 
-SavedState KTX is published under the [MIT License](./LICENSE.txt).
+SavedState KTX is under the [MIT License](./LICENSE.txt).
