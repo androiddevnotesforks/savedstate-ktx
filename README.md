@@ -12,7 +12,7 @@ SavedState-KTX is an Android library that contains Kotlin extensions for `SavedS
 
 ```groovy
 dependencies {
-    implementation "io.woong.savedstate:savedstate-ktx:1.0.0"
+    implementation "io.woong.savedstate:savedstate-ktx:1.1.0"
 }
 ```
 
